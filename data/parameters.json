@@ -1,0 +1,233 @@
+[
+  {
+    "id": "itemsSold",
+    "label": "Garments sold annually",
+    "default": 100000,
+    "min": 0,
+    "max": 10000000000.0,
+    "group": "setup",
+    "benchmark": null,
+    "unit": "items/year",
+    "help": "Use evidence from your business where available."
+  },
+  {
+    "id": "avgWeightKg",
+    "label": "Average garment weight",
+    "default": 0.3,
+    "min": 0.001,
+    "max": 20,
+    "group": "setup",
+    "benchmark": "averageGarmentWeight",
+    "unit": "kg/item",
+    "help": "Use evidence from your business where available."
+  },
+  {
+    "id": "baselineCollectionRate",
+    "label": "Baseline collection rate",
+    "default": 0.2,
+    "min": 0,
+    "max": 1,
+    "group": "setup",
+    "benchmark": "textileCollectionRate",
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "baselineRecyclingYield",
+    "label": "Baseline recycling yield",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "group": "setup",
+    "benchmark": "textileRecyclingRate",
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "participatingCustomers",
+    "label": "Participating customers",
+    "default": 1000,
+    "min": 0,
+    "max": 1000000000.0,
+    "group": "setup",
+    "benchmark": null,
+    "unit": "people",
+    "help": "Use evidence from your business where available."
+  },
+  {
+    "id": "shareOfRangeAffected",
+    "label": "Share of range affected",
+    "default": 0.4,
+    "min": 0,
+    "max": 1,
+    "group": "slowingFlows",
+    "benchmark": null,
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "lifetimeIncreasePct",
+    "label": "Increase in garment lifetime",
+    "default": 0.5,
+    "min": 0,
+    "max": 10,
+    "group": "slowingFlows",
+    "benchmark": null,
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "substitutionRate",
+    "label": "Substitution rate",
+    "default": 0.6,
+    "min": 0,
+    "max": 1,
+    "group": "slowingFlows",
+    "benchmark": "typicalSubstitutionRate",
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "itemsPerPerson",
+    "label": "Items in each wardrobe",
+    "default": 100,
+    "min": 0,
+    "max": 10000,
+    "group": "slowingStocks",
+    "benchmark": "itemsPerPerson",
+    "unit": "items/person",
+    "help": "Use evidence from your business where available."
+  },
+  {
+    "id": "unwornShare",
+    "label": "Wardrobe unworn for a year",
+    "default": 0.3,
+    "min": 0,
+    "max": 1,
+    "group": "slowingStocks",
+    "benchmark": "unwornShare",
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "shareOfUnwornBroughtIntoUse",
+    "label": "Unworn items brought into use",
+    "default": 0.1,
+    "min": 0,
+    "max": 1,
+    "group": "slowingStocks",
+    "benchmark": null,
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "shareDesignedForRecycling",
+    "label": "Designed for recycling",
+    "default": 0.7,
+    "min": 0,
+    "max": 1,
+    "group": "closingFlows",
+    "benchmark": null,
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "newCollectionRate",
+    "label": "New collection rate",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "group": "closingFlows",
+    "benchmark": null,
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "fibreToFibreYield",
+    "label": "Fibre-to-fibre yield",
+    "default": 0.6,
+    "min": 0,
+    "max": 1,
+    "group": "closingFlows",
+    "benchmark": "fibreToFibreRecyclingYield",
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "itemsDisposedPerPersonPerYear",
+    "label": "Items disposed per person annually",
+    "default": 20,
+    "min": 0,
+    "max": 1000,
+    "group": "closingStocks",
+    "benchmark": "itemsDisposedPerPersonPerYear",
+    "unit": "items/person/year",
+    "help": "Use evidence from your business where available."
+  },
+  {
+    "id": "deltaCollectionRate",
+    "label": "Additional collection share",
+    "default": 0.15,
+    "min": 0,
+    "max": 1,
+    "group": "closingStocks",
+    "benchmark": null,
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "yield",
+    "label": "Collected stock recycling yield",
+    "default": 0.5,
+    "min": 0,
+    "max": 1,
+    "group": "closingStocks",
+    "benchmark": null,
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "pctMaterialSavedPerGarment",
+    "label": "Material saved per garment",
+    "default": 0.05,
+    "min": 0,
+    "max": 1,
+    "group": "lifeFlows",
+    "benchmark": null,
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "pctManufacturingWasteAvoided",
+    "label": "Manufacturing waste avoided",
+    "default": 0,
+    "min": 0,
+    "max": 1,
+    "group": "lifeFlows",
+    "benchmark": null,
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "preConsumerWasteRate",
+    "label": "Pre-consumer waste rate",
+    "default": 0.1,
+    "min": 0,
+    "max": 1,
+    "group": "lifeFlows",
+    "benchmark": "preConsumerManufacturingWasteRate",
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  },
+  {
+    "id": "reboundFactor",
+    "label": "Savings lost to extra consumption",
+    "default": 0.15,
+    "min": 0,
+    "max": 1,
+    "group": "systems",
+    "benchmark": "typicalReboundFactor",
+    "unit": "share",
+    "help": "Enter a fraction: 0.6 means 60%."
+  }
+]

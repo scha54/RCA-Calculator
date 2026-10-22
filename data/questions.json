@@ -1,0 +1,106 @@
+[
+  {
+    "id": "slowingFlows",
+    "effect": "Slowing",
+    "column": "Flows",
+    "questions": [
+      "Does it increase the useful lifetime of new garments (e.g. through maintenance and care, repair, re-manufacture, reuse)?",
+      "Does it reduce total new garment production?"
+    ],
+    "parameters": [
+      "shareOfRangeAffected",
+      "lifetimeIncreasePct",
+      "substitutionRate"
+    ]
+  },
+  {
+    "id": "slowingStocks",
+    "effect": "Slowing",
+    "column": "Stocks",
+    "questions": [
+      "Does it reduce the total number of items in the UK wardrobe?",
+      "Does it lead consumers to better use their own existing wardrobe? Will it make them buy less as a result?",
+      "Does it lead to the stock of clothing being used better in general (e.g. by others, UK, abroad)?",
+      "Does it have the ability to reverse trends of clothing overconsumption?"
+    ],
+    "parameters": [
+      "itemsPerPerson",
+      "unwornShare",
+      "shareOfUnwornBroughtIntoUse"
+    ]
+  },
+  {
+    "id": "closingFlows",
+    "effect": "Closing",
+    "column": "Flows",
+    "questions": [
+      "Does it increase the recyclability of new COMPANY clothes being manufactured?",
+      "Does it increase recycling rates for new COMPANY clothes being manufactured?"
+    ],
+    "parameters": [
+      "shareDesignedForRecycling",
+      "newCollectionRate",
+      "fibreToFibreYield"
+    ]
+  },
+  {
+    "id": "closingStocks",
+    "effect": "Closing",
+    "column": "Stocks",
+    "questions": [
+      "Does it increase the recyclability of the existing clothing stock?",
+      "Does it increase the number of clothing items from the UK wardrobe given away for recycling?",
+      "Does it have ability to reverse trends of textiles going to landfill?"
+    ],
+    "parameters": [
+      "itemsDisposedPerPersonPerYear",
+      "deltaCollectionRate",
+      "yield"
+    ]
+  },
+  {
+    "id": "lifeFlows",
+    "effect": "Life cycle",
+    "column": "Flows",
+    "questions": [
+      "Does it lead to any design efficiencies (e.g. less material per product)?",
+      "Does it lead to any manufacturing efficiencies?",
+      "Does it lead to any transportation savings?",
+      "Does it lead to more efficient or less cleaning?",
+      "Does it lead to cleaner forms of recycling not captured yet?",
+      "Does it lead to any other efficiencies not yet captured?"
+    ],
+    "parameters": [
+      "pctMaterialSavedPerGarment",
+      "pctManufacturingWasteAvoided",
+      "preConsumerWasteRate"
+    ]
+  },
+  {
+    "id": "lifeStocks",
+    "effect": "Life cycle",
+    "column": "Stocks",
+    "questions": [
+      "Does it lead to any transportation savings for handling the current clothing stock?",
+      "Does it lead to more efficient or less cleaning for the current clothing stock?",
+      "Does it lead to any other efficiency/ savings (e.g. ironing, tumble drying) not yet captured for current clothing stocks?"
+    ],
+    "parameters": []
+  },
+  {
+    "id": "systems",
+    "effect": "Systems",
+    "column": "Both",
+    "questions": [
+      "Does it lead to negative rebound effects (e.g. consuming more) or positive ones (e.g. from fast to slow fashion)?",
+      "Are there any unintended consequences by upcycling the value of waste?",
+      "Does it lead to radical changes for stores and employees? What are the impacts on those stakeholders and others? Who are the potential winners/ losers?",
+      "What is the effect of multiple co-existing business models?",
+      "What is the impact on society of this innovation?",
+      "What is required for other companies to follow - is that considered in this new business model?"
+    ],
+    "parameters": [
+      "reboundFactor"
+    ]
+  }
+]

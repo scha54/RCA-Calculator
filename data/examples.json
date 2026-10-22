@@ -1,0 +1,318 @@
+[
+  {
+    "version": 1,
+    "name": "Clothing rental",
+    "description": "Illustrative inputs only; not claims about real companies.",
+    "region": "UK",
+    "inputs": {
+      "itemsSold": 100000,
+      "avgWeightKg": 0.3,
+      "baselineCollectionRate": 0.2,
+      "baselineRecyclingYield": 0.5,
+      "participatingCustomers": 1000,
+      "shareOfRangeAffected": 0.4,
+      "lifetimeIncreasePct": 1,
+      "substitutionRate": 0.6,
+      "itemsPerPerson": 100,
+      "unwornShare": 0.3,
+      "shareOfUnwornBroughtIntoUse": 0.1,
+      "shareDesignedForRecycling": 0.7,
+      "newCollectionRate": 0.5,
+      "fibreToFibreYield": 0.6,
+      "itemsDisposedPerPersonPerYear": 20,
+      "deltaCollectionRate": 0.15,
+      "yield": 0.5,
+      "pctMaterialSavedPerGarment": 0.05,
+      "pctManufacturingWasteAvoided": 0,
+      "preConsumerWasteRate": 0.1,
+      "reboundFactor": 0.15
+    },
+    "confidence": {
+      "slowingFlows": "medium",
+      "slowingStocks": "medium",
+      "closingFlows": "medium",
+      "closingStocks": "medium",
+      "lifeFlows": "medium",
+      "lifeStocks": "medium",
+      "systems": "medium"
+    },
+    "bands": {
+      "low": 0.5,
+      "medium": 0.25,
+      "high": 0.1
+    },
+    "mode": "conservative",
+    "confirmed": {
+      "substitutionRate": true,
+      "reboundFactor": true
+    },
+    "checklist": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "notes": [
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "name": "Resale / take-back",
+    "description": "Illustrative inputs only; not claims about real companies.",
+    "region": "UK",
+    "inputs": {
+      "itemsSold": 100000,
+      "avgWeightKg": 0.3,
+      "baselineCollectionRate": 0.2,
+      "baselineRecyclingYield": 0.5,
+      "participatingCustomers": 1000,
+      "shareOfRangeAffected": 0.4,
+      "lifetimeIncreasePct": 0.5,
+      "substitutionRate": 0.6,
+      "itemsPerPerson": 100,
+      "unwornShare": 0.3,
+      "shareOfUnwornBroughtIntoUse": 0.2,
+      "shareDesignedForRecycling": 0.7,
+      "newCollectionRate": 0.8,
+      "fibreToFibreYield": 0.6,
+      "itemsDisposedPerPersonPerYear": 20,
+      "deltaCollectionRate": 0.15,
+      "yield": 0.5,
+      "pctMaterialSavedPerGarment": 0.05,
+      "pctManufacturingWasteAvoided": 0,
+      "preConsumerWasteRate": 0.1,
+      "reboundFactor": 0.15
+    },
+    "confidence": {
+      "slowingFlows": "medium",
+      "slowingStocks": "medium",
+      "closingFlows": "medium",
+      "closingStocks": "medium",
+      "lifeFlows": "medium",
+      "lifeStocks": "medium",
+      "systems": "medium"
+    },
+    "bands": {
+      "low": 0.5,
+      "medium": 0.25,
+      "high": 0.1
+    },
+    "mode": "conservative",
+    "confirmed": {
+      "substitutionRate": true,
+      "reboundFactor": true
+    },
+    "checklist": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "notes": [
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "name": "Repair and care service",
+    "description": "Illustrative inputs only; not claims about real companies.",
+    "region": "UK",
+    "inputs": {
+      "itemsSold": 100000,
+      "avgWeightKg": 0.3,
+      "baselineCollectionRate": 0.2,
+      "baselineRecyclingYield": 0.5,
+      "participatingCustomers": 1000,
+      "shareOfRangeAffected": 0.4,
+      "lifetimeIncreasePct": 0.8,
+      "substitutionRate": 0.6,
+      "itemsPerPerson": 100,
+      "unwornShare": 0.3,
+      "shareOfUnwornBroughtIntoUse": 0.1,
+      "shareDesignedForRecycling": 0,
+      "newCollectionRate": 0.5,
+      "fibreToFibreYield": 0.6,
+      "itemsDisposedPerPersonPerYear": 20,
+      "deltaCollectionRate": 0.15,
+      "yield": 0.5,
+      "pctMaterialSavedPerGarment": 0,
+      "pctManufacturingWasteAvoided": 0,
+      "preConsumerWasteRate": 0.1,
+      "reboundFactor": 0.15
+    },
+    "confidence": {
+      "slowingFlows": "medium",
+      "slowingStocks": "medium",
+      "closingFlows": "medium",
+      "closingStocks": "medium",
+      "lifeFlows": "medium",
+      "lifeStocks": "medium",
+      "systems": "medium"
+    },
+    "bands": {
+      "low": 0.5,
+      "medium": 0.25,
+      "high": 0.1
+    },
+    "mode": "conservative",
+    "confirmed": {
+      "substitutionRate": true,
+      "reboundFactor": true
+    },
+    "checklist": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "notes": [
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      }
+    ]
+  },
+  {
+    "version": 1,
+    "name": "Recycled-fibre range",
+    "description": "Illustrative inputs only; not claims about real companies.",
+    "region": "UK",
+    "inputs": {
+      "itemsSold": 100000,
+      "avgWeightKg": 0.3,
+      "baselineCollectionRate": 0.2,
+      "baselineRecyclingYield": 0.5,
+      "participatingCustomers": 1000,
+      "shareOfRangeAffected": 0.4,
+      "lifetimeIncreasePct": 0,
+      "substitutionRate": 0.6,
+      "itemsPerPerson": 100,
+      "unwornShare": 0.3,
+      "shareOfUnwornBroughtIntoUse": 0,
+      "shareDesignedForRecycling": 1,
+      "newCollectionRate": 0.8,
+      "fibreToFibreYield": 0.8,
+      "itemsDisposedPerPersonPerYear": 20,
+      "deltaCollectionRate": 0.15,
+      "yield": 0.5,
+      "pctMaterialSavedPerGarment": 0.05,
+      "pctManufacturingWasteAvoided": 0,
+      "preConsumerWasteRate": 0.1,
+      "reboundFactor": 0.15
+    },
+    "confidence": {
+      "slowingFlows": "medium",
+      "slowingStocks": "medium",
+      "closingFlows": "medium",
+      "closingStocks": "medium",
+      "lifeFlows": "medium",
+      "lifeStocks": "medium",
+      "systems": "medium"
+    },
+    "bands": {
+      "low": 0.5,
+      "medium": 0.25,
+      "high": 0.1
+    },
+    "mode": "conservative",
+    "confirmed": {
+      "substitutionRate": true,
+      "reboundFactor": true
+    },
+    "checklist": [
+      0.5,
+      0.5,
+      0.5
+    ],
+    "notes": [
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      },
+      {
+        "text": "",
+        "risk": "medium"
+      }
+    ]
+  }
+]

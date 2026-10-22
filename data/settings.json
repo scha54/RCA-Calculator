@@ -1,0 +1,16 @@
+{
+  "sensitivityFraction": 0.2,
+  "radarMaximum": 100,
+  "maxScenarios": 3,
+  "steps": [
+    "Welcome",
+    "Setup",
+    "Business model",
+    "Slowing",
+    "Closing",
+    "Life cycle",
+    "Systems",
+    "Results",
+    "Export"
+  ]
+}

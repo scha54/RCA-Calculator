@@ -1,0 +1,8 @@
+{
+  "baseline": "itemsSold*avgWeightKg*(1-baselineCollectionRate*baselineRecyclingYield)/1000",
+  "slowingFlows": "itemsSold*shareOfRangeAffected*avgWeightKg*(1-1/(1+lifetimeIncreasePct))*substitutionRate*(1-reboundFactor)/1000",
+  "slowingStocks": "participatingCustomers*itemsPerPerson*unwornShare*shareOfUnwornBroughtIntoUse*substitutionRate*avgWeightKg*(1-reboundFactor)/1000",
+  "closingFlows": "MAX(0,itemsSold*avgWeightKg*(shareDesignedForRecycling*newCollectionRate*fibreToFibreYield-baselineCollectionRate*baselineRecyclingYield)/1000)*(1-reboundFactor)*(1-shareOfRangeAffected*(1-1/(1+lifetimeIncreasePct))*substitutionRate)",
+  "closingStocks": "participatingCustomers*itemsDisposedPerPersonPerYear*deltaCollectionRate*yield*avgWeightKg*(1-reboundFactor)/1000*(1-MIN(1,itemsPerPerson*unwornShare*shareOfUnwornBroughtIntoUse*substitutionRate/MAX(0.000001,itemsDisposedPerPersonPerYear)))",
+  "lifeFlows": "itemsSold*shareOfRangeAffected*avgWeightKg*(pctMaterialSavedPerGarment+preConsumerWasteRate*pctManufacturingWasteAvoided)/1000"
+}
