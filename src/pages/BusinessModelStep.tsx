@@ -28,7 +28,8 @@ export const BusinessModelStep: React.FC<BusinessModelStepProps> = ({
   };
 
   const handleBandChange = (level: 'low' | 'medium' | 'high', val: number) => {
-    const clamped = Math.max(0.01, Math.min(1, val));
+    const bounds = level === 'high' ? [0,scenario.bands.medium] : level === 'medium' ? [scenario.bands.high,scenario.bands.low] : [scenario.bands.medium,1];
+    const clamped = Math.max(bounds[0], Math.min(bounds[1], val));
     onUpdateScenario({
       bands: {
         ...scenario.bands,
@@ -80,6 +81,7 @@ export const BusinessModelStep: React.FC<BusinessModelStepProps> = ({
               value={scenario.name}
               onChange={e => onUpdateScenario({ name: e.target.value })}
               className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition"
+              maxLength={200}
               placeholder="e.g. Autumn 2026 Knitwear Resale & Repair"
             />
           </div>
@@ -94,6 +96,7 @@ export const BusinessModelStep: React.FC<BusinessModelStepProps> = ({
               value={scenario.description}
               onChange={e => onUpdateScenario({ description: e.target.value })}
               className="w-full bg-slate-800 border border-slate-700 rounded-xl px-3.5 py-2 text-sm text-white focus:outline-none focus:border-emerald-500 transition"
+              maxLength={20000}
               placeholder="e.g. Pilot circular service launched across 12 flagship stores"
             />
           </div>
@@ -239,8 +242,9 @@ export const BusinessModelStep: React.FC<BusinessModelStepProps> = ({
                 </div>
                 <input
                   type="range"
-                  min="5"
-                  max="80"
+                  aria-label={`${level} confidence band percent`}
+                  min="0"
+                  max="100"
                   step="5"
                   value={currentPct}
                   onChange={e => handleBandChange(level, parseFloat(e.target.value) / 100)}

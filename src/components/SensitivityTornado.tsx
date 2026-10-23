@@ -127,7 +127,7 @@ export const SensitivityTornado: React.FC<SensitivityTornadoProps> = ({
                     <strong className="text-emerald-400">
                       ±{Math.round(item.impact).toLocaleString()} t
                     </strong>
-                    <span className="text-slate-500 ml-1">({item.share.toFixed(1)}%)</span>
+                    <span className="text-slate-400 ml-1">({item.share.toFixed(1)}%)</span>
                   </span>
                 </div>
               </div>

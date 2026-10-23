@@ -43,8 +43,8 @@
     },
     "mode": "conservative",
     "confirmed": {
-      "substitutionRate": true,
-      "reboundFactor": true
+      "substitutionRate": false,
+      "reboundFactor": false
     },
     "checklist": [
       0.5,
@@ -76,7 +76,8 @@
         "text": "",
         "risk": "medium"
       }
-    ]
+    ],
+    "baselineConfidence": "medium"
   },
   {
     "version": 1,
@@ -122,8 +123,8 @@
     },
     "mode": "conservative",
     "confirmed": {
-      "substitutionRate": true,
-      "reboundFactor": true
+      "substitutionRate": false,
+      "reboundFactor": false
     },
     "checklist": [
       0.5,
@@ -155,7 +156,8 @@
         "text": "",
         "risk": "medium"
       }
-    ]
+    ],
+    "baselineConfidence": "medium"
   },
   {
     "version": 1,
@@ -201,8 +203,8 @@
     },
     "mode": "conservative",
     "confirmed": {
-      "substitutionRate": true,
-      "reboundFactor": true
+      "substitutionRate": false,
+      "reboundFactor": false
     },
     "checklist": [
       0.5,
@@ -234,7 +236,8 @@
         "text": "",
         "risk": "medium"
       }
-    ]
+    ],
+    "baselineConfidence": "medium"
   },
   {
     "version": 1,
@@ -280,8 +283,8 @@
     },
     "mode": "conservative",
     "confirmed": {
-      "substitutionRate": true,
-      "reboundFactor": true
+      "substitutionRate": false,
+      "reboundFactor": false
     },
     "checklist": [
       0.5,
@@ -313,6 +316,7 @@
         "text": "",
         "risk": "medium"
       }
-    ]
+    ],
+    "baselineConfidence": "medium"
   }
 ]

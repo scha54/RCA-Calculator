@@ -1,40 +1,56 @@
-import React, { useState, useEffect } from 'react';
-import type { Scenario, Inputs, Confidence } from './engine/model';
-import { examples, fresh, validate } from './engine/model';
-import settings from '../data/settings.json';
-import { Header } from './components/Header';
-import { Stepper } from './components/Stepper';
-import { LiveSummaryBar } from './components/LiveSummaryBar';
-import { WelcomeStep } from './pages/WelcomeStep';
-import { SetupStep } from './pages/SetupStep';
-import { BusinessModelStep } from './pages/BusinessModelStep';
-import { SlowingStep } from './pages/SlowingStep';
-import { ClosingStep } from './pages/ClosingStep';
-import { LifeCycleStep } from './pages/LifeCycleStep';
-import { SystemsStep } from './pages/SystemsStep';
-import { ResultsStep } from './pages/ResultsStep';
-import { ExportStep } from './pages/ExportStep';
-import { CompareView } from './pages/CompareView';
+import React, { useState, useEffect, lazy, Suspense } from "react";
+import type { Scenario, Inputs, Confidence } from "./engine/model";
+import {
+  examples,
+  fresh,
+  restoreScenarios,
+  reportErrors,
+} from "./engine/model";
+import settings from "../data/settings.json";
+import { Header } from "./components/Header";
+import { Stepper } from "./components/Stepper";
+import { LiveSummaryBar } from "./components/LiveSummaryBar";
+import { WelcomeStep } from "./pages/WelcomeStep";
+import { SetupStep } from "./pages/SetupStep";
+import { BusinessModelStep } from "./pages/BusinessModelStep";
+import { SlowingStep } from "./pages/SlowingStep";
+import { ClosingStep } from "./pages/ClosingStep";
+import { LifeCycleStep } from "./pages/LifeCycleStep";
+import { SystemsStep } from "./pages/SystemsStep";
+const ResultsStep = lazy(() =>
+  import("./pages/ResultsStep").then((m) => ({ default: m.ResultsStep })),
+);
+const ExportStep = lazy(() =>
+  import("./pages/ExportStep").then((m) => ({ default: m.ExportStep })),
+);
+import { OutcomeEditor } from "./components/OutcomeEditor";
+const CompareView = lazy(() =>
+  import("./pages/CompareView").then((m) => ({ default: m.CompareView })),
+);
 
-const STORAGE_KEY = 'rca_calculator_scenarios_v1';
+import { STORAGE_KEY, reportDiagnostic } from "./platform/diagnostics";
 
 export const App: React.FC = () => {
-  // Load initial scenarios from localStorage or examples
-  const [scenarios, setScenarios] = useState<Scenario[]>(() => {
+  const [restored] = useState(() => {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          const validList = parsed.filter(s => validate(s).length === 0);
-          if (validList.length > 0) return validList as Scenario[];
-        }
-      }
+      return restoreScenarios(localStorage.getItem(STORAGE_KEY));
     } catch {
-      // Fallback to examples
+      return { scenarios: [], rejected: 1 };
     }
-    return examples.slice(0, 3) as Scenario[];
   });
+  const [scenarios, setScenarios] = useState<Scenario[]>(() =>
+    restored.scenarios.length
+      ? restored.scenarios
+      : (structuredClone(
+          examples.slice(0, settings.maxScenarios),
+        ) as Scenario[]),
+  );
+  const [storageWarning, setStorageWarning] = useState(
+    restored.rejected
+      ? `${restored.rejected} invalid saved scenario(s) could not be loaded. Valid scenarios were retained. The original saved data has been left untouched; download any usable scenarios before enabling saving.`
+      : "",
+  );
+  const [savingEnabled, setSavingEnabled] = useState(!restored.rejected);
 
   const [activeScenarioIndex, setActiveScenarioIndex] = useState<number>(0);
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
@@ -42,12 +58,16 @@ export const App: React.FC = () => {
 
   // Sync to localStorage
   useEffect(() => {
+    if (!savingEnabled) return;
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(scenarios));
-    } catch (err) {
-      console.warn('Unable to persist scenarios to localStorage:', err);
+    } catch {
+      reportDiagnostic("storage_failure");
+      setStorageWarning(
+        "Browser storage is unavailable or full. Download a JSON backup to preserve your changes.",
+      );
     }
-  }, [scenarios]);
+  }, [scenarios, savingEnabled]);
 
   // Ensure activeScenarioIndex is valid
   const safeIndex = Math.min(activeScenarioIndex, scenarios.length - 1);
@@ -55,32 +75,47 @@ export const App: React.FC = () => {
 
   // Updaters
   const handleUpdateScenario = (updated: Partial<Scenario>) => {
-    setScenarios(prev => {
+    setScenarios((prev) => {
       const copy = [...prev];
       copy[safeIndex] = {
         ...copy[safeIndex],
         ...updated,
+        confirmed:
+          updated.inputs ||
+          updated.bands ||
+          updated.outcomes ||
+          updated.region ||
+          updated.mode ||
+          updated.baselineConfidence
+            ? { substitutionRate: false, reboundFactor: false }
+            : (updated.confirmed ?? copy[safeIndex].confirmed),
       };
       return copy;
     });
   };
 
   const handleUpdateInputs = (updated: Partial<Inputs>) => {
-    setScenarios(prev => {
+    setScenarios((prev) => {
       const copy = [...prev];
       copy[safeIndex] = {
         ...copy[safeIndex],
         inputs: {
           ...copy[safeIndex].inputs,
-          ...updated,
+          ...Object.fromEntries(
+            Object.entries(updated).filter(
+              (entry): entry is [string, number] =>
+                typeof entry[1] === "number",
+            ),
+          ),
         },
+        confirmed: { substitutionRate: false, reboundFactor: false },
       };
       return copy;
     });
   };
 
   const handleUpdateConfidence = (dimensionId: string, level: Confidence) => {
-    setScenarios(prev => {
+    setScenarios((prev) => {
       const copy = [...prev];
       copy[safeIndex] = {
         ...copy[safeIndex],
@@ -88,13 +123,17 @@ export const App: React.FC = () => {
           ...copy[safeIndex].confidence,
           [dimensionId]: level,
         },
+        confirmed: { substitutionRate: false, reboundFactor: false },
       };
       return copy;
     });
   };
 
-  const handleConfirmChange = (key: 'substitutionRate' | 'reboundFactor', confirmed: boolean) => {
-    setScenarios(prev => {
+  const handleConfirmChange = (
+    key: "substitutionRate" | "reboundFactor",
+    confirmed: boolean,
+  ) => {
+    setScenarios((prev) => {
       const copy = [...prev];
       copy[safeIndex] = {
         ...copy[safeIndex],
@@ -108,7 +147,7 @@ export const App: React.FC = () => {
   };
 
   const handleUpdateChecklist = (index: number, val: number) => {
-    setScenarios(prev => {
+    setScenarios((prev) => {
       const copy = [...prev];
       const list = [...copy[safeIndex].checklist];
       list[index] = val;
@@ -120,8 +159,12 @@ export const App: React.FC = () => {
     });
   };
 
-  const handleUpdateNote = (index: number, text: string, risk: 'low' | 'medium' | 'high') => {
-    setScenarios(prev => {
+  const handleUpdateNote = (
+    index: number,
+    text: string,
+    risk: "low" | "medium" | "high",
+  ) => {
+    setScenarios((prev) => {
       const copy = [...prev];
       const notes = [...copy[safeIndex].notes];
       notes[index] = { text, risk };
@@ -136,12 +179,14 @@ export const App: React.FC = () => {
   // Scenario operations
   const handleNewScenario = () => {
     if (scenarios.length >= settings.maxScenarios) {
-      alert(`Maximum of ${settings.maxScenarios} scenarios reached. Please delete or overwrite one.`);
+      alert(
+        `Maximum of ${settings.maxScenarios} scenarios reached. Please delete or overwrite one.`,
+      );
       return;
     }
     const newScen = fresh();
     newScen.name = `Scenario ${scenarios.length + 1}`;
-    setScenarios(prev => [...prev, newScen]);
+    setScenarios((prev) => [...prev, newScen]);
     setActiveScenarioIndex(scenarios.length);
     setCurrentStepIndex(1); // Jump to setup
   };
@@ -153,13 +198,13 @@ export const App: React.FC = () => {
     }
     const dup = structuredClone(currentScenario);
     dup.name = `${currentScenario.name} (Copy)`;
-    setScenarios(prev => [...prev, dup]);
+    setScenarios((prev) => [...prev, dup]);
     setActiveScenarioIndex(scenarios.length);
   };
 
   const handleDeleteScenario = () => {
     if (scenarios.length <= 1) return;
-    setScenarios(prev => prev.filter((_, i) => i !== safeIndex));
+    setScenarios((prev) => prev.filter((_, i) => i !== safeIndex));
     setActiveScenarioIndex(0);
   };
 
@@ -168,7 +213,7 @@ export const App: React.FC = () => {
   };
 
   const handleImportScenario = (scen: Scenario) => {
-    setScenarios(prev => {
+    setScenarios((prev) => {
       const copy = [...prev];
       copy[safeIndex] = scen;
       return copy;
@@ -178,26 +223,29 @@ export const App: React.FC = () => {
   // Step navigation
   const handleNextStep = () => {
     if (currentStepIndex < settings.steps.length - 1) {
-      setCurrentStepIndex(prev => prev + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setCurrentStepIndex((prev) => prev + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handlePrevStep = () => {
     if (currentStepIndex > 0) {
-      setCurrentStepIndex(prev => prev - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setCurrentStepIndex((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
   const handleSelectStep = (idx: number) => {
     setCurrentStepIndex(idx);
     setIsComparing(false);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-emerald-500 selection:text-white">
+      <a href="#main-content" className="sr-only focus:not-sr-only">
+        Skip to content
+      </a>
       {/* Top Sticky Header */}
       <Header
         scenarios={scenarios}
@@ -211,6 +259,30 @@ export const App: React.FC = () => {
         onToggleCompare={() => setIsComparing(!isComparing)}
       />
 
+      {storageWarning && (
+        <div role="alert" className="p-4 bg-amber-950 text-amber-100">
+          {storageWarning}
+          {!savingEnabled && (
+            <button
+              onClick={() => {
+                setSavingEnabled(true);
+                setStorageWarning("");
+              }}
+              className="ml-3 underline"
+            >
+              Enable saving and replace invalid stored data
+            </button>
+          )}
+        </div>
+      )}
+      {!!reportErrors(currentScenario).length && (
+        <div
+          role="status"
+          className="draft-notice p-3 bg-amber-950 text-amber-100"
+        >
+          Draft assessment — {reportErrors(currentScenario).join(" ")}
+        </div>
+      )}
       {/* Stepper Navigation (hidden in compare view) */}
       {!isComparing && (
         <Stepper
@@ -220,19 +292,24 @@ export const App: React.FC = () => {
       )}
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 mb-24">
+      <main
+        id="main-content"
+        className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 mb-24"
+      >
         {isComparing ? (
-          <CompareView
-            scenarios={scenarios}
-            onSelectScenario={handleSelectScenario}
-            onClose={() => setIsComparing(false)}
-          />
+          <Suspense fallback={<p role="status">Loading comparison…</p>}>
+            <CompareView
+              scenarios={scenarios}
+              onSelectScenario={handleSelectScenario}
+              onClose={() => setIsComparing(false)}
+            />
+          </Suspense>
         ) : (
           <>
             {currentStepIndex === 0 && (
               <WelcomeStep
                 currentScenario={currentScenario}
-                onSelectScenario={scen => {
+                onSelectScenario={(scen) => {
                   handleUpdateScenario(scen);
                 }}
                 onNext={handleNextStep}
@@ -240,11 +317,29 @@ export const App: React.FC = () => {
             )}
 
             {currentStepIndex === 1 && (
-              <SetupStep
-                scenario={currentScenario}
-                onUpdateInputs={handleUpdateInputs}
-                onNext={handleNextStep}
-              />
+              <>
+                <SetupStep
+                  scenario={currentScenario}
+                  onUpdateInputs={handleUpdateInputs}
+                  onNext={handleNextStep}
+                />
+                <label className="block my-4">
+                  Baseline input confidence{" "}
+                  <select
+                    aria-label="Baseline input confidence"
+                    value={currentScenario.baselineConfidence ?? "medium"}
+                    onChange={(e) =>
+                      handleUpdateScenario({
+                        baselineConfidence: e.target.value as Confidence,
+                      })
+                    }
+                  >
+                    {["low", "medium", "high"].map((level) => (
+                      <option key={level}>{level}</option>
+                    ))}
+                  </select>
+                </label>
+              </>
             )}
 
             {currentStepIndex === 2 && (
@@ -275,13 +370,19 @@ export const App: React.FC = () => {
             )}
 
             {currentStepIndex === 5 && (
-              <LifeCycleStep
-                scenario={currentScenario}
-                onUpdateInputs={handleUpdateInputs}
-                onUpdateConfidence={handleUpdateConfidence}
-                onUpdateChecklist={handleUpdateChecklist}
-                onNext={handleNextStep}
-              />
+              <>
+                <LifeCycleStep
+                  scenario={currentScenario}
+                  onUpdateInputs={handleUpdateInputs}
+                  onUpdateConfidence={handleUpdateConfidence}
+                  onUpdateChecklist={handleUpdateChecklist}
+                  onNext={handleNextStep}
+                />
+                <OutcomeEditor
+                  scenario={currentScenario}
+                  onChange={(outcomes) => handleUpdateScenario({ outcomes })}
+                />
+              </>
             )}
 
             {currentStepIndex === 6 && (
@@ -296,19 +397,23 @@ export const App: React.FC = () => {
             )}
 
             {currentStepIndex === 7 && (
-              <ResultsStep
-                scenario={currentScenario}
-                onNext={handleNextStep}
-                onNavigateStep={handleSelectStep}
-              />
+              <Suspense fallback={<p role="status">Loading results…</p>}>
+                <ResultsStep
+                  scenario={currentScenario}
+                  onNext={handleNextStep}
+                  onNavigateStep={handleSelectStep}
+                />
+              </Suspense>
             )}
 
             {currentStepIndex === 8 && (
-              <ExportStep
-                scenario={currentScenario}
-                onImportScenario={handleImportScenario}
-                onBackToResults={() => handleSelectStep(7)}
-              />
+              <Suspense fallback={<p role="status">Loading export tools…</p>}>
+                <ExportStep
+                  scenario={currentScenario}
+                  onImportScenario={handleImportScenario}
+                  onBackToResults={() => handleSelectStep(7)}
+                />
+              </Suspense>
             )}
           </>
         )}

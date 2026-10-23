@@ -47,12 +47,13 @@ export const Stepper: React.FC<StepperProps> = ({
           {steps.map((step, idx) => {
             const Icon = STEP_ICONS[idx] || Sparkles;
             const isActive = idx === currentStepIndex;
-            const isCompleted = completedSteps.includes(idx) || idx < currentStepIndex;
+            const isCompleted = completedSteps.includes(idx);
 
             return (
               <button
                 key={step}
                 id={`step-nav-${idx}`}
+                aria-current={isActive ? 'step' : undefined}
                 onClick={() => onSelectStep(idx)}
                 className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 group cursor-pointer ${
                   isActive
@@ -78,7 +79,7 @@ export const Stepper: React.FC<StepperProps> = ({
                   )}
                 </div>
                 <span>
-                  <span className="opacity-60 mr-1">{idx + 1}.</span>
+                  <span className="mr-1">{idx + 1}.</span>
                   {step}
                 </span>
               </button>

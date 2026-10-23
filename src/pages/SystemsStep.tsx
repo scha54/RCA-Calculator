@@ -153,6 +153,7 @@ export const SystemsStep: React.FC<SystemsStepProps> = ({
                         <button
                           key={level}
                           type="button"
+                          aria-pressed={isSelected}
                           onClick={() => onUpdateNote(idx, note.text, level)}
                           className={`text-[11px] px-2.5 py-1 rounded-lg border font-bold capitalize transition cursor-pointer ${
                             isSelected
@@ -174,6 +175,8 @@ export const SystemsStep: React.FC<SystemsStepProps> = ({
                 {/* Mitigation & Evidence Textarea */}
                 <div>
                   <textarea
+                    aria-label={`Systems dimension ${idx + 1} evidence and mitigation`}
+                    maxLength={20000}
                     rows={2}
                     value={note.text}
                     onChange={e => onUpdateNote(idx, e.target.value, note.risk as 'low' | 'medium' | 'high')}

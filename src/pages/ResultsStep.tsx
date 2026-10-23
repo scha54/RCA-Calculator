@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Scenario } from '../engine/model';
+import { OutcomeResults } from '../components/OutcomeResults';
 import { calculate } from '../engine/calculate';
 import { RadarProfile } from '../components/RadarProfile';
 import { SensitivityTornado } from '../components/SensitivityTornado';
@@ -247,7 +248,7 @@ export const ResultsStep: React.FC<ResultsStepProps> = ({
                     <span className="text-base font-extrabold text-white font-mono">
                       {Math.round(cell.central).toLocaleString()} t
                     </span>
-                    <span className="text-[11px] text-slate-500 font-mono ml-1.5">
+                    <span className="text-[11px] text-slate-400 font-mono ml-1.5">
                       [{Math.round(cell.low).toLocaleString()} – {Math.round(cell.high).toLocaleString()}]
                     </span>
                   </div>
@@ -261,6 +262,7 @@ export const ResultsStep: React.FC<ResultsStepProps> = ({
         </div>
       </div>
 
+      <OutcomeResults scenario={scenario} />
       {/* Visual Analytics: Radar Profile & Sensitivity Tornado */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Radar Profile */}

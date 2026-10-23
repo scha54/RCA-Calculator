@@ -32,6 +32,7 @@ export const WelcomeStep: React.FC<WelcomeStepProps> = ({
     if (!file) return;
     setUploadError(null);
     const res = await readScenarioFromFile(file);
+    e.target.value = '';
     if (res.scenario) {
       onSelectScenario(res.scenario);
       onNext();

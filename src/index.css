@@ -43,3 +43,27 @@
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(51, 65, 85, 0.8);
 }
+
+/* Accessible controls for additional models and confidence settings. */
+.outcome-editor input[type="number"], .outcome-editor input:not([type]),
+.outcome-editor textarea, select {
+  background: #1e293b; color: #f1f5f9; border: 1px solid #64748b;
+  border-radius: .4rem; padding: .4rem; max-width: 100%;
+}
+button:disabled { opacity: .5; cursor: not-allowed; }
+:focus-visible { outline: 2px solid #34d399; outline-offset: 3px; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+@media print {
+  @page { size: A4; margin: 12mm; }
+  body { background: white !important; }
+  body * { visibility: hidden; }
+  .report-card.report-ready, .report-card.report-ready * { visibility: visible; }
+  .report-card.report-ready { position: absolute; top: 0; left: 0; width: 100%; margin: 0; padding: 0; border: 0; box-shadow: none; font-size: 10pt; }
+  .report-card.report-ready * { color: black !important; background: white !important; box-shadow: none !important; }
+  .report-card button { display: none !important; }
+  .report-card tr, .report-card p { break-inside: avoid; }
+  .report-card table { font-size: 9pt; }
+  .report-card th, .report-card td { padding: 3pt; border-bottom: 1px solid #aaa; }
+}

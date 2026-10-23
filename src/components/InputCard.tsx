@@ -130,6 +130,7 @@ export const InputCard: React.FC<InputCardProps> = ({
         <input
           type="range"
           id={`slider-${id}`}
+          aria-label={`${label} slider`}
           min={min}
           max={max}
           step={isShare ? (max <= 1 ? 0.01 : 0.05) : (max <= 20 ? 0.01 : max <= 1000 ? 1 : 1000)}

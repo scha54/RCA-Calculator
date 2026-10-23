@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-30 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-slate-100 shadow-lg">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 gap-4">
+        <div className="flex items-center justify-between min-h-16 py-2 gap-4 flex-wrap">
           {/* Logo & Brand */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white shadow-md shadow-emerald-500/20">
@@ -64,9 +64,10 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="relative flex items-center">
               <select
                 id="scenario-selector"
+                aria-label="Active scenario"
                 value={activeScenarioIndex}
                 onChange={e => onSelectScenario(Number(e.target.value))}
-                className="bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-slate-200 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors font-medium cursor-pointer"
+                className="max-w-[220px] bg-slate-800 hover:bg-slate-700/80 border border-slate-700 text-slate-200 text-sm rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-colors font-medium cursor-pointer"
               >
                 {scenarios.map((s, idx) => (
                   <option key={idx} value={idx}>

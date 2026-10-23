@@ -58,6 +58,7 @@ export const ConfidencePicker: React.FC<ConfidencePickerProps> = ({
               type="button"
               key={opt.level}
               id={`confidence-${id}-${opt.level}`}
+              aria-pressed={isSelected}
               onClick={() => onChange(opt.level)}
               className={`p-3 rounded-xl border text-left transition cursor-pointer ${
                 isSelected

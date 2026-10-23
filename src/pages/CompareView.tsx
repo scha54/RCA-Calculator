@@ -1,8 +1,17 @@
-import React from 'react';
-import type { Scenario } from '../engine/model';
-import { calculate } from '../engine/calculate';
-import { parameters } from '../engine/model';
-import { Layers, ChevronLeft, TrendingDown, RefreshCw, Activity, ShieldCheck } from '../components/Icons';
+import React from "react";
+import type { Scenario } from "../engine/model";
+import { calculate } from "../engine/calculate";
+import { reportErrors } from "../engine/model";
+import { calculateOutcomes } from "../engine/outcomes";
+import { parameters } from "../engine/model";
+import {
+  Layers,
+  ChevronLeft,
+  TrendingDown,
+  RefreshCw,
+  Activity,
+  ShieldCheck,
+} from "../components/Icons";
 
 interface CompareViewProps {
   scenarios: Scenario[];
@@ -16,7 +25,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
   onClose,
 }) => {
   const calculations = React.useMemo(() => {
-    return scenarios.map(s => {
+    return scenarios.map((s) => {
       try {
         return calculate(s);
       } catch {
@@ -25,14 +34,20 @@ export const CompareView: React.FC<CompareViewProps> = ({
     });
   }, [scenarios]);
 
+  const outcomeCalculations = scenarios.map((s, i) =>
+    calculations[i] ? calculateOutcomes(s, calculations[i]!.total) : [],
+  );
+  const outcomeRows = [
+    ...new Map(outcomeCalculations.flat().map((m) => [m.id, m])).values(),
+  ];
   const keyParamIds = [
-    'itemsSold',
-    'lifetimeIncreasePct',
-    'substitutionRate',
-    'shareDesignedForRecycling',
-    'newCollectionRate',
-    'fibreToFibreYield',
-    'reboundFactor',
+    "itemsSold",
+    "lifetimeIncreasePct",
+    "substitutionRate",
+    "shareDesignedForRecycling",
+    "newCollectionRate",
+    "fibreToFibreYield",
+    "reboundFactor",
   ];
 
   return (
@@ -48,7 +63,8 @@ export const CompareView: React.FC<CompareViewProps> = ({
             Scenario Comparison Matrix ({scenarios.length} Scenarios)
           </h2>
           <p className="text-sm text-slate-400 mt-1">
-            Direct side-by-side comparison of net virgin material savings, circular strategies, and key leverage inputs.
+            Direct side-by-side comparison of net virgin material savings,
+            circular strategies, and key leverage inputs.
           </p>
         </div>
 
@@ -61,6 +77,14 @@ export const CompareView: React.FC<CompareViewProps> = ({
         </button>
       </div>
 
+      <p className="text-sm text-amber-200">
+        Draft scenarios:{" "}
+        {scenarios
+          .filter((s) => reportErrors(s).length)
+          .map((s) => s.name)
+          .join(", ") || "none"}
+        . Draft results require assumption review before final reporting.
+      </p>
       {/* Comparison Grid Table */}
       <div className="bg-slate-900/80 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
         <div className="overflow-x-auto">
@@ -71,7 +95,10 @@ export const CompareView: React.FC<CompareViewProps> = ({
                   Assessment Metric
                 </th>
                 {scenarios.map((s, idx) => (
-                  <th key={idx} className="p-4 font-bold text-white text-sm min-w-56">
+                  <th
+                    key={idx}
+                    className="p-4 font-bold text-white text-sm min-w-56"
+                  >
                     <div className="flex items-center justify-between">
                       <span className="truncate">{s.name}</span>
                       <button
@@ -100,8 +127,13 @@ export const CompareView: React.FC<CompareViewProps> = ({
                   Net Virgin Material Avoided
                 </td>
                 {calculations.map((c, idx) => (
-                  <td key={idx} className="p-4 font-mono font-extrabold text-base text-emerald-400">
-                    {c ? `${Math.round(c.total.central).toLocaleString()} tonnes/yr` : '—'}
+                  <td
+                    key={idx}
+                    className="p-4 font-mono font-extrabold text-base text-emerald-400"
+                  >
+                    {c
+                      ? `${Math.round(c.total.central).toLocaleString()} tonnes/yr`
+                      : "—"}
                   </td>
                 ))}
               </tr>
@@ -113,7 +145,9 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 </td>
                 {calculations.map((c, idx) => (
                   <td key={idx} className="p-4 font-mono text-slate-300">
-                    {c ? `[${Math.round(c.total.low).toLocaleString()} – ${Math.round(c.total.high).toLocaleString()}]` : '—'}
+                    {c
+                      ? `[${Math.round(c.total.low).toLocaleString()} – ${Math.round(c.total.high).toLocaleString()}]`
+                      : "—"}
                   </td>
                 ))}
               </tr>
@@ -124,11 +158,15 @@ export const CompareView: React.FC<CompareViewProps> = ({
                   Virgin Material Reduction %
                 </td>
                 {calculations.map((c, idx) => (
-                  <td key={idx} className="p-4 font-mono font-bold text-sm text-teal-300">
-                    {c ? `${c.percent.central.toFixed(1)}%` : '—'}
+                  <td
+                    key={idx}
+                    className="p-4 font-mono font-bold text-sm text-teal-300"
+                  >
+                    {c ? `${c.percent.central.toFixed(1)}%` : "—"}
                     {c && (
                       <span className="text-slate-400 font-normal text-[11px] block">
-                        [{c.percent.low.toFixed(1)}% – {c.percent.high.toFixed(1)}%]
+                        [{c.percent.low.toFixed(1)}% –{" "}
+                        {c.percent.high.toFixed(1)}%]
                       </span>
                     )}
                   </td>
@@ -137,35 +175,59 @@ export const CompareView: React.FC<CompareViewProps> = ({
 
               {/* Baseline Material */}
               <tr>
-                <td className="p-4 text-slate-400">Baseline Virgin Requirement</td>
+                <td className="p-4 text-slate-400">
+                  Baseline Virgin Requirement
+                </td>
                 {calculations.map((c, idx) => (
                   <td key={idx} className="p-4 font-mono text-slate-200">
-                    {c ? `${Math.round(c.baseline.central).toLocaleString()} t/yr` : '—'}
+                    {c
+                      ? `${Math.round(c.baseline.central).toLocaleString()} t/yr`
+                      : "—"}
                   </td>
                 ))}
               </tr>
 
               {/* Section Header: Mechanism Breakdown */}
               <tr className="bg-slate-950/50">
-                <td colSpan={scenarios.length + 1} className="p-3 font-bold text-slate-300 uppercase text-[10px] tracking-wider">
+                <td
+                  colSpan={scenarios.length + 1}
+                  className="p-3 font-bold text-slate-300 uppercase text-[10px] tracking-wider"
+                >
                   Mechanism Breakdown (Central Tonnes)
                 </td>
               </tr>
 
               {[
-                { id: 'slowingFlows', label: 'Slowing Loops - Lifetime Extension (Flows)' },
-                { id: 'slowingStocks', label: 'Slowing Loops - Wardrobe Activation (Stocks)' },
-                { id: 'closingFlows', label: 'Closing Loops - Design for Recyclability (Flows)' },
-                { id: 'closingStocks', label: 'Closing Loops - Take-back & Post-consumer (Stocks)' },
-                { id: 'lifeFlows', label: 'Life Cycle - Material & Waste Avoidance (Flows)' },
-              ].map(m => (
+                {
+                  id: "slowingFlows",
+                  label: "Slowing Loops - Lifetime Extension (Flows)",
+                },
+                {
+                  id: "slowingStocks",
+                  label: "Slowing Loops - Wardrobe Activation (Stocks)",
+                },
+                {
+                  id: "closingFlows",
+                  label: "Closing Loops - Design for Recyclability (Flows)",
+                },
+                {
+                  id: "closingStocks",
+                  label: "Closing Loops - Take-back & Post-consumer (Stocks)",
+                },
+                {
+                  id: "lifeFlows",
+                  label: "Life Cycle - Material & Waste Avoidance (Flows)",
+                },
+              ].map((m) => (
                 <tr key={m.id}>
                   <td className="p-4 text-slate-300 pl-6">{m.label}</td>
                   {calculations.map((c, idx) => {
-                    const cell = c?.cells.find(x => x.id === m.id);
+                    const cell = c?.cells.find((x) => x.id === m.id);
                     return (
                       <td key={idx} className="p-4 font-mono text-slate-300">
-                        {cell ? `${Math.round(cell.central).toLocaleString()} t` : '0 t'}
+                        {cell
+                          ? `${Math.round(cell.central).toLocaleString()} t`
+                          : "0 t"}
                       </td>
                     );
                   })}
@@ -174,15 +236,18 @@ export const CompareView: React.FC<CompareViewProps> = ({
 
               {/* Section Header: Key Assumptions */}
               <tr className="bg-slate-950/50">
-                <td colSpan={scenarios.length + 1} className="p-3 font-bold text-slate-300 uppercase text-[10px] tracking-wider">
+                <td
+                  colSpan={scenarios.length + 1}
+                  className="p-3 font-bold text-slate-300 uppercase text-[10px] tracking-wider"
+                >
                   Key Strategic Parameter Inputs
                 </td>
               </tr>
 
-              {keyParamIds.map(pId => {
-                const paramDef = parameters.find(p => p.id === pId);
+              {keyParamIds.map((pId) => {
+                const paramDef = parameters.find((p) => p.id === pId);
                 if (!paramDef) return null;
-                const isShare = paramDef.unit === 'share';
+                const isShare = paramDef.unit === "share";
 
                 return (
                   <tr key={pId}>
@@ -193,7 +258,9 @@ export const CompareView: React.FC<CompareViewProps> = ({
                       const val = (s.inputs as Record<string, number>)[pId];
                       return (
                         <td key={idx} className="p-4 font-mono text-slate-200">
-                          {isShare ? `${Math.round(val * 100)}%` : val.toLocaleString()}
+                          {isShare
+                            ? `${Math.round(val * 100)}%`
+                            : val.toLocaleString()}
                         </td>
                       );
                     })}
@@ -204,6 +271,47 @@ export const CompareView: React.FC<CompareViewProps> = ({
           </table>
         </div>
       </div>
+      {!!outcomeRows.length && (
+        <section className="overflow-x-auto rounded-xl border border-slate-700 p-4">
+          <h3 className="font-bold">Additional outcome comparison</h3>
+          <p className="text-sm">
+            Annual central estimates; only enabled modules contribute. Compare
+            equivalent boundaries and sourced factors. Negative savings indicate
+            increased burdens. Social indicators are separate.
+          </p>
+          <table className="text-left w-full text-sm">
+            <thead>
+              <tr>
+                <th scope="col">Outcome</th>
+                {scenarios.map((s, i) => (
+                  <th key={i} scope="col">
+                    {s.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {outcomeRows.map((m) => (
+                <tr key={m.id}>
+                  <th scope="row">
+                    {m.label} ({m.unit})
+                  </th>
+                  {outcomeCalculations.map((values, i) => {
+                    const value = values.find((v) => v.id === m.id);
+                    return (
+                      <td key={i}>
+                        {value
+                          ? `${value.range.central.toLocaleString(undefined, { maximumFractionDigits: 2 })} [${value.range.low.toLocaleString(undefined, { maximumFractionDigits: 2 })} – ${value.range.high.toLocaleString(undefined, { maximumFractionDigits: 2 })}]`
+                          : "Not assessed"}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+      )}
     </div>
   );
 };
